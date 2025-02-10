@@ -54,20 +54,30 @@ public class Calculator {
 
             if (ch == '(') {
                 ops.push(ch);
-            } else if (ch == ')') {
+            }
+            else if (ch == ')') {
                 while (!ops.isEmpty() && ops.peek() != '(') {
-                    double b = values.pop();
-                    double a = values.pop();
-                    values.push(calculate(a, b, ops.pop()));
+                    try {
+                        double b = values.pop();
+                        double a = values.pop();
+                        values.push(calculate(a, b, ops.pop()));
+                    }
+                    catch(ArithmeticException e){
+                        throw new ArithmeticException("Invalid number format");
+                    }
                 }
                 ops.pop();
-            } else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
+            }
+            else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
                 while (!ops.isEmpty() && precedence(ops.peek()) >= precedence(ch)) {
                     double b = values.pop();
                     double a = values.pop();
                     values.push(calculate(a, b, ops.pop()));
                 }
                 ops.push(ch);
+            }
+            else{
+                throw new ArithmeticException("Number format error");
             }
             i++;
         }
