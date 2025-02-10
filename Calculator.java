@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Calculator {
     public static void main(String[] args){
@@ -21,8 +22,49 @@ public class Calculator {
     }
 
     public static double evaluateExpression(String expression) {
-        System.out.println(expression);
-        return 0.0;
+        Stack<Double> values = new Stack<>();
+        Stack<Character> ops = new Stack<>();
+
+        int i=0;
+        while(i<expression.length()){
+            char ch = expression.charAt(i);
+            if(ch==' '){
+                i++;
+                continue;
+            }
+            if (Character.isDigit(ch)) {
+                StringBuilder num = new StringBuilder();
+                while (i < expression.length() && (Character.isDigit(expression.charAt(i)) || expression.charAt(i) == '.')) {
+                    num.append(expression.charAt(i++));
+                }
+                values.push(Double.parseDouble(num.toString()));
+                continue;
+            }
+
+            if(ch=='('){
+                ops.push(ch);
+            }
+            else if (ch == ')') {
+                while (!ops.isEmpty() && ops.peek() != '(') {
+                    values.push(calculate(values.pop(), values.pop(), ops.pop()));
+                }
+                ops.pop();
+            }
+            else if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
+                while (!ops.isEmpty() && precedence(ops.peek()) >= precedence(ch)) {
+                    values.push(calculate(values.pop(), values.pop(), ops.pop()));
+                }
+                ops.push(ch);
+            }
+
+            i++;
+        }
+
+        while(!ops.isEmpty()){
+            values.push(calculate(values.pop(), values.pop(), ops.pop()));
+        }
+
+        return values.pop();
     }
 
 }
