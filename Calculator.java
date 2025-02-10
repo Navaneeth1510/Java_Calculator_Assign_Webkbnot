@@ -10,6 +10,16 @@ public class Calculator {
         return (op == '+' || op == '-') ? 1 : (op == '*' || op == '/') ? 2 : 0;
     }
 
+    public static double calculate(double a, double b, char op) {
+        return switch (op) {
+            case '+' -> a + b;
+            case '-' -> a - b;
+            case '*' -> a * b;
+            case '/' -> a / b;
+            default -> 0;
+        };
+    }
+
     public static double evaluateExpression(String expression) {
         System.out.println(expression);
         return 0.0;
